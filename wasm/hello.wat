@@ -1,22 +1,22 @@
-;; Módulo WebAssembly en formato de texto (WAT).
-;; Para cambiar el programa, edita este archivo y vuelve a compilar.
+;; WebAssembly module in text format (WAT).
+;; To change the program, edit this file and rebuild.
 
 (module
-  ;; Memoria lineal compartida con JavaScript.
+  ;; Linear memory shared with JavaScript.
   (memory (export "memory") 1)
 
-  ;; Texto guardado en la posición 0 de la memoria.
+  ;; Text stored at position 0 of the memory.
   (data (i32.const 0) "Hello, WebAssembly!")
 
-  ;; Devuelve la posición donde empieza el texto.
+  ;; Returns the position where the text starts.
   (func (export "message_ptr") (result i32)
     i32.const 0)
 
-  ;; Devuelve la longitud del texto (19 caracteres).
+  ;; Returns the length of the text (19 characters).
   (func (export "message_len") (result i32)
     i32.const 19)
 
-  ;; Función de ejemplo: suma dos enteros.
+  ;; Example function: adds two integers.
   (func (export "add") (param $a i32) (param $b i32) (result i32)
     local.get $a
     local.get $b

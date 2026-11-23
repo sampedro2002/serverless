@@ -1,76 +1,76 @@
 # Serverless – Hello WebAssembly (monorepo)
 
-Ejemplo mínimo de un monorepo con:
+Minimal monorepo example with:
 
-- **WebAssembly**: un módulo escrito en texto (`.wat`) que se compila a `.wasm`.
-- **Web**: una página HTML que carga el `.wasm` y muestra su resultado.
-- **Docker**: una imagen que compila el WebAssembly y sirve la web con nginx.
+- **WebAssembly**: a module written in text format (`.wat`) that is compiled to `.wasm`.
+- **Web**: an HTML page that loads the `.wasm` and shows its result.
+- **Docker**: an image that compiles the WebAssembly and serves the web app with nginx.
 
-## Estructura
+## Structure
 
 ```
 serverless/
-├── wasm/                  # Código WebAssembly
-│   ├── hello.wat          # Programa en WAT (aquí es donde cambias la lógica)
-│   ├── build.js           # Compila hello.wat -> ../web/hello.wasm
-│   └── package.json       # Dependencia: wabt (compilador WAT)
-├── web/                   # Frontend estático
-│   └── index.html         # Carga hello.wasm y muestra el texto y la suma
+├── wasm/                  # WebAssembly code
+│   ├── hello.wat          # Program in WAT (this is where you change the logic)
+│   ├── build.js           # Compiles hello.wat -> ../web/hello.wasm
+│   └── package.json       # Dependency: wabt (WAT compiler)
+├── web/                   # Static frontend
+│   └── index.html         # Loads hello.wasm and shows the text and the sum
 ├── docker/
-│   └── Dockerfile         # Compila el wasm y sirve la web con nginx
-├── docker-compose.yml     # Atajo para levantar el contenedor
+│   └── Dockerfile         # Compiles the wasm and serves the web app with nginx
+├── docker-compose.yml     # Shortcut to run the container
 └── README.md
 ```
 
-## Opción 1: Ejecutar con Docker (lo más sencillo)
+## Option 1: Run with Docker (simplest)
 
-No necesitas instalar nada más que Docker:
+You only need Docker installed:
 
 ```bash
 docker compose up --build
 ```
 
-Abre http://localhost:8080 en el navegador. Deberías ver `Hello, WebAssembly!` y `2 + 3 = 5`.
+Open http://localhost:8080 in your browser. You should see `Hello, WebAssembly!` and `2 + 3 = 5`.
 
-Para parar: `Ctrl+C` o `docker compose down`.
+To stop: `Ctrl+C` or `docker compose down`.
 
-## Opción 2: Ejecutar sin Docker (desarrollo local del WebAssembly)
+## Option 2: Run without Docker (local WebAssembly development)
 
-Requiere Node.js 18+ :
+Requires Node.js 18+:
 
 ```bash
 cd wasm
 npm install
-npm run build          # genera ../web/hello.wasm
+npm run build          # generates ../web/hello.wasm
 cd ../web
 python3 -m http.server 8000
 ```
 
-Abre http://localhost:8000.
+Open http://localhost:8000.
 
-## Cómo modificarlo
+## How to modify it
 
-### Cambiar el WebAssembly
+### Change the WebAssembly
 
-1. Edita `wasm/hello.wat`. Por ejemplo, cambia el texto de `(data ...)` y actualiza `message_len` con la nueva longitud.
-2. Añade funciones con `(func (export "nombre") ...)` para exponerlas a JavaScript.
-3. Recompila: `cd wasm && npm run build` (o simplemente `docker compose up --build`).
+1. Edit `wasm/hello.wat`. For example, change the text in `(data ...)` and update `message_len` with the new length.
+2. Add functions with `(func (export "name") ...)` to expose them to JavaScript.
+3. Rebuild: `cd wasm && npm run build` (or simply `docker compose up --build`).
 
-Desde JavaScript, las funciones exportadas se usan así: `instance.exports.nombre(...)`.
-Ojo: WebAssembly solo maneja números (`i32`, `i64`, `f32`, `f64`). Para texto se usa la memoria lineal, como en este ejemplo.
+From JavaScript, exported functions are used like this: `instance.exports.name(...)`.
+Note: WebAssembly only handles numbers (`i32`, `i64`, `f32`, `f64`). For text, use linear memory, as in this example.
 
-### Cambiar la web
+### Change the web app
 
-Edita `web/index.html`. Los cambios se ven con solo recargar la página en modo local, o con `docker compose up --build` en Docker.
+Edit `web/index.html`. Changes show up by reloading the page in local mode, or with `docker compose up --build` in Docker.
 
-### Cambiar Docker
+### Change Docker
 
-Edita `docker/Dockerfile`:
+Edit `docker/Dockerfile`:
 
-- Etapa `wasm-build`: imagen de Node que compila el `.wat`.
-- Etapa final (`nginx:alpine`): imagen que sirve la web. Puedes cambiar el puerto en `docker-compose.yml` (`"8080:80"`).
+- `wasm-build` stage: Node image that compiles the `.wat`.
+- Final stage (`nginx:alpine`): image that serves the web app. You can change the port in `docker-compose.yml` (`"8080:80"`).
 
-## Notas
+## Notes
 
-- `web/hello.wasm` y `node_modules/` no se suben al repositorio (ver `.gitignore`): se generan al compilar.
-- Para inicializar git en la raíz: `git init` (todavía no es un repositorio).
+- `web/hello.wasm` and `node_modules/` are not committed (see `.gitignore`): they are generated when building.
+- To initialize git at the root: `git init` (it is not a repository yet).

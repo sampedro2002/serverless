@@ -1,5 +1,5 @@
-// Compila hello.wat a hello.wasm y lo deja en ../web/
-// Uso: npm install && node build.js
+// Compiles hello.wat to hello.wasm and writes it to ../web/
+// Usage: npm install && node build.js
 const fs = require('fs');
 const path = require('path');
 const wabtInit = require('wabt');
@@ -17,7 +17,7 @@ const wabtInit = require('wabt');
 
   fs.mkdirSync(outDir, { recursive: true });
   fs.writeFileSync(outPath, buffer);
-  console.log(`Compilado: ${outPath} (${buffer.length} bytes)`);
+  console.log(`Compiled: ${outPath} (${buffer.length} bytes)`);
 })().catch((err) => {
   console.error(err);
   process.exit(1);

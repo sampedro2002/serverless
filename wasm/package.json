@@ -2,7 +2,7 @@
   "name": "hello-wasm",
   "version": "1.0.0",
   "private": true,
-  "description": "Hello World en WebAssembly: compila hello.wat a hello.wasm",
+  "description": "Hello World in WebAssembly: compiles hello.wat to hello.wasm",
   "scripts": {
     "build": "node build.js"
   },
