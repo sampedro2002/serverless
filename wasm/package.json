@@ -1,0 +1,12 @@
+{
+  "name": "hello-wasm",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Hello World en WebAssembly: compila hello.wat a hello.wasm",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "devDependencies": {
+    "wabt": "^1.0.36"
+  }
+}

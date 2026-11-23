@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello WebAssembly</title>
+  <style>
+    body { font-family: system-ui, sans-serif; display: grid; place-items: center; min-height: 100vh; margin: 0; background: #f4f4f8; }
+    main { background: white; padding: 2rem 3rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.1); text-align: center; }
+    h1 { margin-top: 0; }
+    code { background: #eee; padding: 2px 6px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1 id="message">Cargando…</h1>
+    <p>2 + 3 = <strong id="sum">…</strong> (calculado en WebAssembly)</p>
+  </main>
+
+  <script>
+    // Carga hello.wasm y lee el texto desde su memoria lineal.
+    async function main() {
+      const { instance } = await WebAssembly.instantiateStreaming(fetch('hello.wasm'));
+      const { memory, message_ptr, message_len, add } = instance.exports;
+
+      const ptr = message_ptr();
+      const len = message_len();
+      const bytes = new Uint8Array(memory.buffer, ptr, len);
+      document.getElementById('message').textContent = new TextDecoder().decode(bytes);
+
+      document.getElementById('sum').textContent = add(2, 3);
+    }
+
+    main().catch((err) => {
+      document.getElementById('message').textContent = 'Error: ' + err.message;
+      console.error(err);
+    });
+  </script>
+</body>
+</html>
