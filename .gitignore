@@ -1,2 +1,22 @@
 node_modules/
 web/hello.wasm
+
+# Dependency and build logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Docker local data
+.docker/
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
